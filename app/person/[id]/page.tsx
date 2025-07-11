@@ -18,7 +18,7 @@ type Person = {
 
 async function getPerson(id: string): Promise<Person> {
   const response = await fetch(
-    `https://billions-api.nomadcoders.wokers.dev/person/${id}`,
+    `https://billions-api.nomadcoders.workers.dev/person/${id}`,
     {
       cache: 'no-store',
     },

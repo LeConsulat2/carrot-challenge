@@ -27,14 +27,16 @@ async function getPerson(id: string): Promise<Person> {
 }
 
 export default async function PersonPage({
-  params,
+    params,
 }: {
-  params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-  const person = await getPerson(params.id);
+    const { id } = await params;
+    const person = await getPerson(id);
+}
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="sm:px-6 lg:px-8 max-w-3xl mx-auto px-4 ">
       <div className="flex flex-col items-center bg-white shadow p-6 rounded-xl text-center">
         <Image
           src={person.squareImage}

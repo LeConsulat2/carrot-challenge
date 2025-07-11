@@ -27,13 +27,12 @@ async function getPerson(id: string): Promise<Person> {
 }
 
 export default async function PersonPage({
-    params,
+  params,
 }: {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
-    const person = await getPerson(id);
-}
+  const { id } = await params;
+  const person = await getPerson(id);
 
   return (
     <div className="sm:px-6 lg:px-8 max-w-3xl mx-auto px-4 ">

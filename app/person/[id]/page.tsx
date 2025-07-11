@@ -1,4 +1,3 @@
-import { ImageConfigContext } from 'next/dist/shared/lib/image-config-context.shared-runtime';
 import Image from 'next/image';
 import Link from 'next/link';
 

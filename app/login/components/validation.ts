@@ -1,4 +1,4 @@
-//app/login/components/validation.tsx
+//app/login/components/validation.ts
 
 import { z } from 'zod';
 

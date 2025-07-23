@@ -1,15 +1,22 @@
-//Updated app/login/page.tsx
+//app/create-account/page.tsx
 'use client';
 
 import { useState } from 'react';
-import { FormData } from './components/validation';
-import { loginAction } from './actions';
+import { createAccountAction } from './actions';
 
-export default function LoginPage() {
+interface FormData {
+  email: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export default function CreateAccountPage() {
   const [formData, setFormData] = useState<FormData>({
     email: '',
     username: '',
     password: '',
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState<
@@ -23,15 +30,17 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const result = await loginAction(formData);
+      const result = await createAccountAction(formData);
 
       if (result.success) {
         setMessage(result.message);
         setErrors({});
-        // Redirect will be handled by the server action
-        setTimeout(() => {
-          window.location.href = '/profile';
-        }, 1500);
+        setFormData({
+          email: '',
+          username: '',
+          password: '',
+          confirmPassword: '',
+        });
       } else {
         setErrors(result.errors || {});
         setMessage(result.message || '');
@@ -48,7 +57,7 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
         <h1 className="text-4xl font-bold text-center text-white mb-8">
-          Login
+          Create Account
         </h1>
 
         <form onSubmit={onSubmit} className="space-y-6">
@@ -142,20 +151,50 @@ export default function LoginPage() {
               ))}
           </div>
 
+          {/* Confirm Password */}
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={(e) =>
+                setFormData({ ...formData, confirmPassword: e.target.value })
+              }
+              className={`w-full px-3 py-2 bg-gray-700 border rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
+              }`}
+              disabled={isLoading}
+              required
+            />
+            {errors.confirmPassword &&
+              errors.confirmPassword.map((error, index) => (
+                <p key={index} className="mt-1 text-sm text-red-400">
+                  {error}
+                </p>
+              ))}
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
 
           {/* Success/Error Message */}
           {message && (
             <div
               className={`p-3 rounded-md text-sm ${
-                message.includes('successful')
+                message.includes('successful') || message.includes('created')
                   ? 'bg-green-900 text-green-300 border border-green-700'
                   : 'bg-red-900 text-red-300 border border-red-700'
               }`}
@@ -164,15 +203,12 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Create Account Link */}
+          {/* Login Link */}
           <div className="text-center">
             <p className="text-gray-400">
-              Don&apos;t have an account?{' '}
-              <a
-                href="/create-account"
-                className="text-blue-400 hover:text-blue-300"
-              >
-                Create one here
+              Already have an account?{' '}
+              <a href="/login" className="text-blue-400 hover:text-blue-300">
+                Login here
               </a>
             </p>
           </div>
